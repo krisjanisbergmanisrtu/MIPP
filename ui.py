@@ -1,21 +1,31 @@
 import tkinter as tk
 from tkinter import messagebox
+from game import *
 import random
-computer_result=0
-human_result=0
+
+computer_result = 0
+human_result = 0
 binary_str = ''
+
+
 def player_choice():
     # placeholder
     pass
+
+
 def algo_choice():
     # placeholder
     pass
+
+
 def gen_rand_sequence(length):
     # generate a rand sequence with 0s and 1s
     seq = ""
     for i in range(length):
-        seq = seq + str(random.randint(0,1))
+        seq = seq + str(random.randint(0, 1))
     return seq
+
+
 def convert_to_binary_and_display(binary_str):
     # clear previous buttons and reset the list of buttons and clicked status
     for widget in binary_frame.winfo_children():
@@ -23,7 +33,7 @@ def convert_to_binary_and_display(binary_str):
     buttons.clear()
     clicked_buttons.clear()
     # check if function called to generate a new game or called to continue the game
-    if(len(binary_str)<1):
+    if (len(binary_str) < 1):
         try:
             length = int(entry.get())
             if not 15 <= length <= 25:
@@ -39,13 +49,16 @@ def convert_to_binary_and_display(binary_str):
         human_result = 0
         computer_result_label.config(text=str("Computer" + " " + str(computer_result)))
 
-    else: binary_str = binary_str
+    else:
+        binary_str = binary_str
     # generate btns for sequence
     for index, bit in enumerate(binary_str):
         button = tk.Button(binary_frame, text=bit, command=lambda idx=index: on_button_click(idx))
         button.pack(side=tk.LEFT, padx=2)
         buttons.append(button)  # Add the button to the list
-        #button_idx_map[button]=index
+        # button_idx_map[button]=index
+        init_tree(binary_str)
+
 
 def on_button_click(index):
     # add btn to clicked btns
@@ -64,15 +77,15 @@ def on_button_click(index):
                 if i not in clicked_buttons:
                     new_str = new_str + buttons[i].cget('text')
             # Reset the clicked buttons list
-            global computer_result 
-            computer_result +=1
+            global computer_result
+            computer_result += 1
             clicked_buttons.clear()
             computer_result_label.config(text=str("Computer" + " " + str(computer_result)))
             # generate new btns
             print(new_str)
             convert_to_binary_and_display(new_str)
             # if less then 2 btns left game over
-            if(len(new_str)==1 or len(new_str)==0):
+            if (len(new_str) == 1 or len(new_str) == 0):
                 end_result_label.config(text='game over')
                 for widget in binary_frame.winfo_children():
                     widget.destroy()
@@ -80,6 +93,7 @@ def on_button_click(index):
                     clicked_buttons.clear()
 
         clicked_buttons.clear()
+
 
 root = tk.Tk()
 root.title("1.praktiskais darbs")
@@ -119,8 +133,6 @@ entry_label.pack(side=tk.LEFT)
 entry = tk.Entry(input_frame, width=5)
 entry.pack(side=tk.LEFT, padx=10)
 
-
-
 # Submit button(start game)
 submit_btn = tk.Button(input_frame, text="Convert", command=lambda: convert_to_binary_and_display(''))
 submit_btn.pack(side=tk.LEFT)
@@ -138,7 +150,7 @@ human_result_label.pack(side=tk.LEFT)
 computer_result_label = tk.Label(state_frame, text=str("Computer" + " " + str(computer_result)))
 computer_result_label.pack(side=tk.RIGHT)
 
-result_frame =  tk.Frame(root)
+result_frame = tk.Frame(root)
 result_frame.pack(pady=20)
 end_result_label = tk.Label(result_frame, text="game ongoing")
 end_result_label.pack(fill="none", expand=True)

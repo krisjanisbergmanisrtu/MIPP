@@ -17,11 +17,12 @@ Node = namedtuple('Node',
                   ['value', 'p1_points', 'p2_points', 'is_root', 'level', 'indx', 'parent_indx', 'children_indxs'])
 
 # root_node has to be recalculated from UI
-root_node = Node(value="1010", p1_points=0, p2_points=0, is_root=True, level=0, indx=0, parent_indx=-1,
-                 children_indxs=[])
+# root_node = Node(value="1010", p1_points=0, p2_points=0, is_root=True, level=0, indx=0, parent_indx=-1,
+#                  children_indxs=[])
 
 # this will contain all required properties for generating a tree
-tree = [root_node]  # This will contain nodes for tree
+# tree = [root_node]  # This will contain nodes for tree
+tree = []
 
 
 # generate_base_nodes - this method generates new possible nodes based on parent node
@@ -95,7 +96,12 @@ def gen_node(parent_node):
                 return
 
 
-gen_node(root_node)
+def init_tree(digit_string):
+    tree.append(Node(value=digit_string, p1_points=0, p2_points=0, is_root=True, level=0, indx=0, parent_indx=-1,
+                     children_indxs=[]))
+
+
+gen_node(tree[0])
 
 print(len(tree))
 print(tree)
