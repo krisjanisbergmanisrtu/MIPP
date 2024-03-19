@@ -85,7 +85,8 @@ def gen_node(parent_node):
 
         for node in nodes:
             node = node._replace(indx=len(tree))
-            # TODO Update children index list for parent node
+            tree[parent_node.indx] = tree[parent_node.indx]._replace(
+                children_indxs=getattr(tree[parent_node.indx], 'children_indxs') + [node.indx])
             # parent_node = parent_node._replace(children_indxs=getattr(parent_node, 'children_indxs') + [node.indx])
             tree.append(node)
             if len(getattr(node, 'value')) >= 2:
