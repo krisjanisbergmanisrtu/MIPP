@@ -8,5 +8,5 @@ TODO <br>
 3) Create minmax functions
 4) Create Alfa-Beta functions
 5) Integrate tree generation with UI
-6) Tree generation, add param for max level
+6) Tree generation, add param for max level - DONE
 7) Heuristic functions
