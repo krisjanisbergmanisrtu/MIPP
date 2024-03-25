@@ -9,4 +9,4 @@ TODO <br>
 4) Create Alfa-Beta functions
 5) Integrate tree generation with UI
 6) Tree generation, add param for max level - DONE
-7) Heuristic functions
+7) Heuristic functions - DONE
