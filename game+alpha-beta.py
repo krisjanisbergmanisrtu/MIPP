@@ -104,15 +104,20 @@ def alpha_beta(node, alpha, beta, max_visibility):
         return beta
 
 def gen_node(parent_node, max_visibility):
-    
-    if len(getattr(parent_node, 'value')) < 2 or getattr(parent_node, 'level') >= max_visibility:
+    # if length is less than two then it is not possible to play anymore
+    if len(getattr(parent_node, 'value')) < 2:
         return
-    else:
+        # while length is at least 2 then we can still play the game
+    elif getattr(parent_node, 'level') >= max_visibility:
+        return
+    else:  # while len(getattr(parent_node, 'value')) >= 2:
         nodes = generate_base_nodes(parent_node)
+
         for node in nodes:
             node = node._replace(indx=len(tree))
             tree[parent_node.indx] = tree[parent_node.indx]._replace(
                 children_indxs=getattr(tree[parent_node.indx], 'children_indxs') + [node.indx])
+
             tree.append(node)
             if len(getattr(node, 'value')) >= 2:
                 gen_node(node, max_visibility)
