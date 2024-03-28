@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from game import *
+from tree import *
 import random
 
 computer_result = 0

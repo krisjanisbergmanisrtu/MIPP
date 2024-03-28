@@ -3,7 +3,6 @@
 # Work In Progress
 # Nodes inspired by Datu struktūras(1),22/23-P Uzdevums Nr.1-2, Krisjanis Bergmanis
 from collections import namedtuple
-import math
 
 # Static variable that is hardcoded to represent max visibility
 MAX_VISIBILITY = 5
@@ -122,7 +121,7 @@ def init_tree(digit_string):
                      children_indxs=[], heuristic_val=0))
 
 
-gen_node(tree[0], MAX_VISIBILITY)
+# gen_node(tree[0], MAX_VISIBILITY) # This is used for testing
 
 print(len(tree))
 print(tree)
