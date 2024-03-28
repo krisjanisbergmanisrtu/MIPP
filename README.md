@@ -10,3 +10,4 @@ TODO <br>
 5) Integrate tree generation with UI
 6) Tree generation, add param for max level - DONE
 7) Heuristic functions - DONE
+8) Function for winning path - DONE
