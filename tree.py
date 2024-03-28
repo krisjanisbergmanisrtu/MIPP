@@ -29,6 +29,9 @@ Node = namedtuple('Node',
 # tree = [root_node]  # This will contain nodes for tree
 tree = []
 
+# contains only list of nodes leading to winning path
+winning_path = []
+
 
 def calc_heuristic_val(parent_node, current_node):
     heuristic_val = current_node.level * 2 + getattr(current_node, 'p1_points') - getattr(current_node, 'p2_points')
