@@ -6,8 +6,11 @@ import random
 computer_result = 0
 human_result = 0
 binary_str = ''
-
-
+level_counter = 0
+p1_points = 0
+p2_points = 0
+prev_node = 0
+sum_flag = True
 def player_choice():
     # placeholder
     pass
@@ -43,22 +46,37 @@ def convert_to_binary_and_display(binary_str):
             return
 
         binary_str = gen_rand_sequence(length)  # generate random binary str for new game
+        init_tree(binary_str)
+        gen_node(tree[0],3)
         global computer_result
         global human_result
         computer_result = 0
         human_result = 0
-        computer_result_label.config(text=str("Computer" + " " + str(computer_result)))
+        #computer_result_label.config(text=str("Computer" + " " + str(computer_result)))
 
     else:
         binary_str = binary_str
+        global level_counter
+        global prev_node
+        global sum_flag
+        if level_counter % 3 == 0:
+            tree.clear()
+            init_tree(binary_str)
+            gen_node(tree[0],3)
+            level_counter = 0
+            prev_node = 0
+            sum_flag = True
+        else:
+            sum_flag = False
+        level_counter += 1
+
     # generate btns for sequence
     for index, bit in enumerate(binary_str):
         button = tk.Button(binary_frame, text=bit, command=lambda idx=index: on_button_click(idx))
         button.pack(side=tk.LEFT, padx=2)
         buttons.append(button)  # Add the button to the list
         # button_idx_map[button]=index
-        init_tree(binary_str)
-
+    #print(tree)
 
 def on_button_click(index):
     # add btn to clicked btns
@@ -70,22 +88,54 @@ def on_button_click(index):
     if len(clicked_buttons) == 2:  # if exactly two btns have been clicked
         if abs(clicked_buttons[0] - clicked_buttons[1]) == 1:  # check if clicked btns adjacent
             new_str = ''
+            keep_bit = min(clicked_buttons)
+            clicked_str = str(buttons[clicked_buttons[0]].cget('text')) + " " + str(buttons[clicked_buttons[1]].cget('text'))
+            new_bit = {
+                "0 1": "0",
+                "0 0": "1",
+                "1 0": "1",
+                "1 1": "0",
+            }
             # Make adjacent clicked buttons disappear
             buttons[clicked_buttons[0]].pack_forget()
             buttons[clicked_buttons[1]].pack_forget()
+            ## todo: add new bits to the binary string
             for i in range(len(buttons)):
                 if i not in clicked_buttons:
                     new_str = new_str + buttons[i].cget('text')
+            new_str = new_str[:keep_bit] + new_bit[clicked_str] + new_str[keep_bit:]
             # Reset the clicked buttons list
-            global computer_result
-            computer_result += 1
+            global p1_points
+            global p2_points
+            #computer_result += 1
             clicked_buttons.clear()
-            computer_result_label.config(text=str("Computer" + " " + str(computer_result)))
+            global prev_node
+            print(len(tree))
+            for node in tree:
+                if str(node.value) == new_str and prev_node == 0:
+                    prev_node = node
+                    print(node)
+                    p1_points = p1_points+node.p1_points
+                    p2_points = p2_points+node.p2_points
+                    #print(p1_points)
+                    #print(p2_points)
+                    computer_result_label.config(text=str("Computer" + " " + str(p1_points)))
+                    human_result_label.config(text=str("Human" + " " + str(p2_points)))
+                elif str(node.value) == new_str and node.parent_indx==prev_node.indx:
+                    prev_node = node
+                    print(node)
+                    #print('newnode')
+                    p1_points = node.p1_points
+                    p2_points = node.p2_points
+                    #print(p1_points)
+                    #print(p2_points)
+                    computer_result_label.config(text=str("Computer" + " " + str(p1_points)))
+                    human_result_label.config(text=str("Human" + " " + str(p2_points)))
             # generate new btns
-            print(new_str)
+            #print(len(new_str))
             convert_to_binary_and_display(new_str)
             # if less then 2 btns left game over
-            if (len(new_str) == 1 or len(new_str) == 0):
+            if (len(new_str) == 0):
                 end_result_label.config(text='game over')
                 for widget in binary_frame.winfo_children():
                     widget.destroy()
@@ -144,10 +194,10 @@ binary_frame.pack(pady=10)
 state_frame = tk.Frame(root)
 state_frame.pack(pady=15)
 
-human_result_label = tk.Label(state_frame, text=str("Human" + " " + str(human_result)))
+human_result_label = tk.Label(state_frame, text=str("Human" + " " + " "))
 human_result_label.pack(side=tk.LEFT)
 
-computer_result_label = tk.Label(state_frame, text=str("Computer" + " " + str(computer_result)))
+computer_result_label = tk.Label(state_frame, text=str("Computer" + " " +" "))
 computer_result_label.pack(side=tk.RIGHT)
 
 result_frame = tk.Frame(root)

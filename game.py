@@ -122,7 +122,7 @@ def init_tree(digit_string):
                      children_indxs=[], heuristic_val=0))
 
 
-gen_node(tree[0], MAX_VISIBILITY)
+#gen_node(tree[0], MAX_VISIBILITY)
 
 print(len(tree))
 print(tree)
