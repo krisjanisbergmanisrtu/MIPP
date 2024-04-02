@@ -46,7 +46,7 @@ if best_path:
     last_node = tree[last_node_index]
 
     # Print the details of the last node
-    print(f"Node(value='{last_node.value}', p1_points={last_node.p1_points}, p2_points={last_node.p2_points}, is_root={last_node.is_root}, level={last_node.level}, indx={last_node.indx}, parent_indx={last_node.parent_indx}, children_indxs={last_node.children_indxs}, heuristic_val={last_node.heuristic_val})")
+    print(f"Node(value='{last_node.value}', p1_points={last_node.p1_points}, p2_points={last_node.p2_points}, level={last_node.level}, indx={last_node.indx}, parent_indx={last_node.parent_indx}, children_indxs={last_node.children_indxs}, heuristic_val={last_node.heuristic_val})")
 # TESTING
 
 

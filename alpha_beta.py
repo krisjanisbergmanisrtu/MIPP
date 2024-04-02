@@ -35,9 +35,9 @@ def alpha_beta(node, alpha, beta, max_visibility):
 
 
 # Initialize alpha and beta
-alpha = Node(value="", p1_points=0, p2_points=0, is_root=True, level=0, indx=0, parent_indx=-1,
+alpha = Node(value="", p1_points=0, p2_points=0, level=0, indx=0, parent_indx=-1,
              children_indxs=[], heuristic_val=float('-inf'))
-beta = Node(value="", p1_points=0, p2_points=0, is_root=True, level=0, indx=0, parent_indx=-1,
+beta = Node(value="", p1_points=0, p2_points=0, level=0, indx=0, parent_indx=-1,
             children_indxs=[], heuristic_val=float('inf'))
 
 # init_tree('1010')  # This is used for testing
