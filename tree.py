@@ -18,7 +18,7 @@ MAX_VISIBILITY = 5
 
 Node = namedtuple('Node',
                   ['value', 'p1_points', 'p2_points', 'level', 'indx', 'parent_indx', 'children_indxs',
-                   'heuristic_val'])
+                   'heuristic_val', 'best_combo_indxs'])
 
 # root_node has to be recalculated from UI
 # root_node = Node(value="1010", p1_points=0, p2_points=0, level=0, indx=0, parent_indx=-1,
@@ -56,7 +56,8 @@ def generate_base_nodes(parent_node):
                         level=getattr(parent_node, 'level') + 1,
                         indx=len(tree), parent_indx=getattr(parent_node, 'indx'),
                         children_indxs=[],
-                        heuristic_val=0)
+                        heuristic_val=0,
+                        best_combo_indxs=[])
         # determine which player would make a move
         if new_node.level % 2 != 0:
             p_active = new_node.p1_points
@@ -78,6 +79,9 @@ def generate_base_nodes(parent_node):
         elif combo == "11":
             new_node = new_node._replace(value=value[:i] + "0" + value[i + 2:])
             p_active = p_active + 1
+        # Add selected nodes to track which buttons computer needs to press
+        new_node = new_node._replace(best_combo_indxs=getattr(new_node,'best_combo_indxs') + [i])
+        new_node = new_node._replace(best_combo_indxs=getattr(new_node,'best_combo_indxs') + [(i+1)])
 
         # add points to correct player
         if new_node.level % 2 != 0:
@@ -120,7 +124,7 @@ def gen_node(parent_node, max_visibility):
 
 def init_tree(digit_string):
     tree.append(Node(value=digit_string, p1_points=0, p2_points=0, level=0, indx=0, parent_indx=-1,
-                     children_indxs=[], heuristic_val=0))
+                     children_indxs=[], heuristic_val=0, best_combo_indxs=[]))
 
 
 # gen_node(tree[0], MAX_VISIBILITY) # This is used for testing

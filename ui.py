@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from tree import *
 from minimax import *
+from collections import namedtuple
 #from alpha_beta import *
 import random
 
@@ -10,13 +11,35 @@ level_counter = 0
 p1_points = 0
 p2_points = 0
 prev_node = 0
-
-def player_choice(player):
-    print('first player is ' + str(player))
-    
+p1 = 0
+p2 = 0
+best_path = []
+algorithm = ""
+Player = namedtuple('Player',
+                  ['type', 'points', 'state'])
+global player1
+global player2
+player1 = Player(type="", points=0, state=0)
+player2 = Player(type="", points=0, state=0)
+def player_choice(player, Player1, Player2):
+    global player1
+    global player2
+    if player == 'human':
+        player1 = player1._replace(type='human', state=1)
+        player2 = player2._replace(type='computer', state=0)
+    elif player == 'computer':
+        player1 = player1._replace(type='computer', state=1)
+        player2 = player2._replace(type='human', state=0)
+    print(getattr(player1, 'type') + ' is starting the game')
 
 def algo_choice(algo):
+    global algorithm
+    if algo == 'minmax':
+        algorithm = 'minmax'
+    if algo == 'alpha-beta':
+        algorithm = 'alpha-beta'
     print('algorithm is ' + str(algo))
+
 
 
 def gen_rand_sequence(length):
@@ -29,6 +52,9 @@ def gen_rand_sequence(length):
 
 def convert_to_binary_and_display(binary_str):
     global prev_node
+    global player1
+    if player1.type == "":
+        return
     # clear previous buttons and reset the list of buttons and clicked status
     for widget in binary_frame.winfo_children():
         widget.destroy()
@@ -38,13 +64,14 @@ def convert_to_binary_and_display(binary_str):
     if (len(binary_str) < 1):
         try:
             length = int(entry.get())
-            if not 15 <= length <= 25:
+            if not 4 <= length <= 25:
                 raise ValueError("Number out of range")
         except ValueError:
             messagebox.showerror("Invalid Input", "Please enter a valid integer between 15 and 25.")
             return
 
         binary_str = gen_rand_sequence(length)  # generate random binary str for new game
+        binary_str = '1010'
         init_tree(binary_str)
         gen_node(tree[0],3)
         prev_node = tree[0]
@@ -143,10 +170,10 @@ setting_frame.pack(pady=0)
 player_choice_label = tk.Label(setting_frame, text="Who is starting?")
 player_choice_label.pack(side=tk.LEFT)
 
-computer_btn = tk.Button(setting_frame, text="Computer", command=lambda:player_choice('computer'))
+computer_btn = tk.Button(setting_frame, text="Computer", command=lambda:player_choice('computer', player1,player2))
 computer_btn.pack(side=tk.LEFT)
 
-player_btn = tk.Button(setting_frame, text="Human", command=lambda:player_choice('human'))
+player_btn = tk.Button(setting_frame, text="Human", command=lambda:player_choice('human',player1,player2))
 player_btn.pack(side=tk.LEFT)
 
 # Algo choice UI
@@ -199,4 +226,32 @@ buttons = []
 clicked_buttons = []
 button_idx_map = {}
 
-root.mainloop()
+
+while True:
+    root.mainloop()
+    if algorithm=='':
+        break
+
+    if player1.type == 'human' and player1.state==1:
+        pass # wait for human interaction
+    else:
+        if algorithm == 'minmax':
+            best_path, best_value = minimax(tree[0], 0, True)
+            game_states = [tree[idx].value for idx in best_path]
+            print((best_path))
+            print(buttons)
+            buttons[0].invoke()
+            buttons[1].invoke()
+            player1 = player1._replace(state=0)
+            root.update()
+
+            break
+        elif algorithm == 'alpha-beta':
+            pass
+
+        # gen tree 
+        # find current node in tree ?
+        # get best path
+        # take turn by selecting 2 digits for next node
+    # update points ? 
+#root.mainloop()
