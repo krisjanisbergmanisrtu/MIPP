@@ -1,24 +1,22 @@
 import tkinter as tk
 from tkinter import messagebox
 from tree import *
+from minimax import *
+#from alpha_beta import *
 import random
 
-computer_result = 0
-human_result = 0
 binary_str = ''
 level_counter = 0
 p1_points = 0
 p2_points = 0
 prev_node = 0
-sum_flag = True
-def player_choice():
-    # placeholder
-    pass
 
+def player_choice(player):
+    print('first player is ' + str(player))
+    
 
-def algo_choice():
-    # placeholder
-    pass
+def algo_choice(algo):
+    print('algorithm is ' + str(algo))
 
 
 def gen_rand_sequence(length):
@@ -30,6 +28,7 @@ def gen_rand_sequence(length):
 
 
 def convert_to_binary_and_display(binary_str):
+    global prev_node
     # clear previous buttons and reset the list of buttons and clicked status
     for widget in binary_frame.winfo_children():
         widget.destroy()
@@ -48,27 +47,20 @@ def convert_to_binary_and_display(binary_str):
         binary_str = gen_rand_sequence(length)  # generate random binary str for new game
         init_tree(binary_str)
         gen_node(tree[0],3)
-        global computer_result
-        global human_result
-        computer_result = 0
-        human_result = 0
+        prev_node = tree[0]
         #computer_result_label.config(text=str("Computer" + " " + str(computer_result)))
 
     else:
         binary_str = binary_str
         global level_counter
-        global prev_node
-        global sum_flag
-        if level_counter % 3 == 0:
+        if level_counter % 3 == 0 and prev_node.parent_indx != 0:
+            print(level_counter)
             tree.clear()
             init_tree(binary_str)
+            prev_node = prev_node._replace(indx=0,parent_indx=0, level=0)
+            tree[0] = prev_node
             gen_node(tree[0],3)
-            level_counter = 0
-            prev_node = 0
-            sum_flag = True
-        else:
-            sum_flag = False
-        level_counter += 1
+            #prev_node = 0
 
     # generate btns for sequence
     for index, bit in enumerate(binary_str):
@@ -99,7 +91,6 @@ def on_button_click(index):
             # Make adjacent clicked buttons disappear
             buttons[clicked_buttons[0]].pack_forget()
             buttons[clicked_buttons[1]].pack_forget()
-            ## todo: add new bits to the binary string
             for i in range(len(buttons)):
                 if i not in clicked_buttons:
                     new_str = new_str + buttons[i].cget('text')
@@ -107,34 +98,28 @@ def on_button_click(index):
             # Reset the clicked buttons list
             global p1_points
             global p2_points
-            #computer_result += 1
+            global level_counter
             clicked_buttons.clear()
             global prev_node
-            print(len(tree))
             for node in tree:
                 if str(node.value) == new_str and prev_node == 0:
                     prev_node = node
                     print(node)
-                    p1_points = p1_points+node.p1_points
-                    p2_points = p2_points+node.p2_points
-                    #print(p1_points)
-                    #print(p2_points)
+                    p1_points = node.p1_points
+                    p2_points = node.p2_points
                     computer_result_label.config(text=str("Computer" + " " + str(p1_points)))
                     human_result_label.config(text=str("Human" + " " + str(p2_points)))
+                    level_counter += 1
                 elif str(node.value) == new_str and node.parent_indx==prev_node.indx:
                     prev_node = node
                     print(node)
-                    #print('newnode')
                     p1_points = node.p1_points
                     p2_points = node.p2_points
-                    #print(p1_points)
-                    #print(p2_points)
                     computer_result_label.config(text=str("Computer" + " " + str(p1_points)))
                     human_result_label.config(text=str("Human" + " " + str(p2_points)))
-            # generate new btns
-            #print(len(new_str))
+                    level_counter += 1
             convert_to_binary_and_display(new_str)
-            # if less then 2 btns left game over
+
             if (len(new_str) == 0):
                 end_result_label.config(text='game over')
                 for widget in binary_frame.winfo_children():
@@ -143,7 +128,11 @@ def on_button_click(index):
                     clicked_buttons.clear()
 
         clicked_buttons.clear()
-
+        # best_path, best_value = minimax(tree[0], 0, True)
+        # game_states = [tree[idx].value for idx in best_path]
+        # print(print(game_states))
+def on_player_btn_click():
+    pass
 
 root = tk.Tk()
 root.title("1.praktiskais darbs")
@@ -154,10 +143,10 @@ setting_frame.pack(pady=0)
 player_choice_label = tk.Label(setting_frame, text="Who is starting?")
 player_choice_label.pack(side=tk.LEFT)
 
-computer_btn = tk.Button(setting_frame, text="Computer", command=player_choice)
+computer_btn = tk.Button(setting_frame, text="Computer", command=lambda:player_choice('computer'))
 computer_btn.pack(side=tk.LEFT)
 
-player_btn = tk.Button(setting_frame, text="Human", command=player_choice)
+player_btn = tk.Button(setting_frame, text="Human", command=lambda:player_choice('human'))
 player_btn.pack(side=tk.LEFT)
 
 # Algo choice UI
@@ -166,10 +155,10 @@ algo_frame.pack(pady=5)
 algo_choice_label = tk.Label(algo_frame, text="Choose an algorithm")
 algo_choice_label.pack(side=tk.LEFT)
 
-minmax_btn = tk.Button(algo_frame, text="Min-max", command=player_choice)
+minmax_btn = tk.Button(algo_frame, text="Min-max", command=lambda:algo_choice('minmax'))
 minmax_btn.pack(side=tk.LEFT)
 
-alpha_beta_btn = tk.Button(algo_frame, text="Alpha-beta", command=player_choice)
+alpha_beta_btn = tk.Button(algo_frame, text="Alpha-beta", command=lambda:algo_choice('alpha-beta'))
 alpha_beta_btn.pack(side=tk.LEFT)
 
 # Frame for the input field and submit button
