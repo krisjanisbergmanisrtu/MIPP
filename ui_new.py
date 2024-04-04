@@ -16,6 +16,10 @@ class BinaryGame:
         # Player setup
         self.player1 = Player()
         self.player2 = Player()
+        self.human = Player()
+        self.human.type = 'Human'
+        self.computer = Player()
+        self.computer.type = 'Computer'
         self.level_counter = 0
         # GUI elements
         self.setup_gui()
@@ -130,15 +134,15 @@ class BinaryGame:
 
     def player_choice(self, player):
         if player == 'human':
-            self.player1.type = 'human'
-            self.player2.type = 'computer'
-            self.player1.state = 1
-            self.player2.state = 0
+            self.player1 = self.human
+            self.player2 = self.computer
+            self.human.state = 1
+            self.computer.state = 0
         elif player == 'computer':
-            self.player1.type = 'computer'
-            self.player2.type = 'human'
-            self.player1.state = 0
-            self.player2.state = 1
+            self.player1 = self.computer
+            self.player2 = self.human
+            self.computer.state = 1
+            self.human.state = 0
 
         print(self.player1.type + ' is starting the game')
 
@@ -171,11 +175,13 @@ class BinaryGame:
         # Placeholder; replace with actual logic
         print('Computers turn')
         # self.buttons[0].config(bg="light gray")
+        self.computer.state = 0
+        self.human.state = 1
         self.buttons[0].invoke()
         # self.buttons[1].config(bg="light gray")
+
         self.buttons[1].invoke()
-        self.player2.state = 0
-        self.player1.state = 1
+
         print("Computers turn done")
         # time.sleep(2000)
 
@@ -262,17 +268,21 @@ class BinaryGame:
                 print(self.player2.points)
                 self.update_points_display()
                 print("Button clicked")
-                # self.player1.state = 0
-                # self.player2.state = 1
-                # if self.player1.state == 0 and self.player2.state == 1:
-                #     self.process_computers_turn()
+                               #
+                if self.human.state == 1 and self.computer.state == 0:
+                    self.human.state = 0
+                    self.computer.state = 1
+                    print("Humans turn done")
+                # self.play_game()
 
 
     def play_game(self):
-        print(f"self.player1.state='{self.player1.state}'")
-        print(f"self.player2.state='{self.player2.state}'")
-        if self.player1.state == 0 and self.player2.state == 1:
+        print(f"self.human.state='{self.human.state}'")
+        print(f"self.computer.state='{self.computer.state}'")
+        if self.human.state == 0 and self.computer.state == 1:
             self.process_computers_turn()
+        else:
+            print("humans turn")
 
 
 
