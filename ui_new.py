@@ -197,6 +197,7 @@ class BinaryGame:
         self.level_counter += 1
         self.fill_tree()
         #gen_node(self.tree[0],3)
+        self.play_game()
 
 
     def display_binary_sequence(self):
@@ -216,66 +217,64 @@ class BinaryGame:
         self.fill_tree()
 
 
-        self.play()
-
     def on_button_click(self, index):
         print(f"button with index'{index}' was clicked")
-        if self.is_players_turn():
-            if index in self.clicked_buttons:
-                return  # ignore if this button was already clicked
-            self.clicked_buttons.append(index)
+        # if self.is_players_turn():
+        if index in self.clicked_buttons:
+            return  # ignore if this button was already clicked
+        self.clicked_buttons.append(index)
 
-            new_str = self.binary_str
-            if len(self.clicked_buttons) == 2:  # if exactly two btns have been clicked
-                if abs(self.clicked_buttons[0] - self.clicked_buttons[1]) == 1:  # check if clicked btns adjacent
-                    new_str = ''
-                    keep_bit = min(self.clicked_buttons)
-                    clicked_str = str(self.buttons[self.clicked_buttons[0]].cget('text')) + " " + str(self.buttons[self.clicked_buttons[1]].cget('text'))
-                    new_bit = {
-                        "0 1": "0",
-                        "0 0": "1",
-                        "1 0": "1",
-                        "1 1": "0",
-                    }
-                    # Make adjacent clicked buttons disappear
-                    self.buttons[self.clicked_buttons[0]].pack_forget()
-                    self.buttons[self.clicked_buttons[1]].pack_forget()
-                    for i in range(len(self.buttons)):
-                        if i not in self.clicked_buttons:
-                            new_str = new_str + self.buttons[i].cget('text')
-                    new_str = new_str[:keep_bit] + new_bit[clicked_str] + new_str[keep_bit:]
-                    self.binary_str = new_str
-                    self.display_binary_sequence()
-                    self.level_counter += 1
-                    self.gen_nodes()
-                    for node in tree:
-                        if str(node.value) == new_str and self.prev_node==0:
-                            self.prev_node = node
-                        if str(node.value) == new_str and node.parent_indx==self.prev_node.indx:
-                            self.prev_node = node
-                    if self.level_counter % 3 == 0 and self.level_counter!=0:
-                        print(self.prev_node)
-                        self.clear_tree()
+        new_str = self.binary_str
+        if len(self.clicked_buttons) == 2:  # if exactly two btns have been clicked
+            if abs(self.clicked_buttons[0] - self.clicked_buttons[1]) == 1:  # check if clicked btns adjacent
+                new_str = ''
+                keep_bit = min(self.clicked_buttons)
+                clicked_str = str(self.buttons[self.clicked_buttons[0]].cget('text')) + " " + str(self.buttons[self.clicked_buttons[1]].cget('text'))
+                new_bit = {
+                    "0 1": "0",
+                    "0 0": "1",
+                    "1 0": "1",
+                    "1 1": "0",
+                }
+                # Make adjacent clicked buttons disappear
+                self.buttons[self.clicked_buttons[0]].pack_forget()
+                self.buttons[self.clicked_buttons[1]].pack_forget()
+                for i in range(len(self.buttons)):
+                    if i not in self.clicked_buttons:
+                        new_str = new_str + self.buttons[i].cget('text')
+                new_str = new_str[:keep_bit] + new_bit[clicked_str] + new_str[keep_bit:]
+                self.binary_str = new_str
+                self.display_binary_sequence()
+                self.level_counter += 1
+                self.gen_nodes()
+                for node in tree:
+                    if str(node.value) == new_str and self.prev_node==0:
+                        self.prev_node = node
+                    if str(node.value) == new_str and node.parent_indx==self.prev_node.indx:
+                        self.prev_node = node
+                if self.level_counter % 3 == 0 and self.level_counter!=0:
                     print(self.prev_node)
-                    self.player1.points = self.prev_node.p1_points
-                    self.player2.points = self.prev_node.p2_points
-                    print(self.player1.points)
-                    print(self.player2.points)
-                    self.update_points_display()
-                    print("Button clicked")
-                    # self.player1.state = 0
-                    # self.player2.state = 1
-                    # if self.player1.state == 0 and self.player2.state == 1:
-                    #     self.process_computers_turn()
+                    self.clear_tree()
+                print(self.prev_node)
+                self.player1.points = self.prev_node.p1_points
+                self.player2.points = self.prev_node.p2_points
+                print(self.player1.points)
+                print(self.player2.points)
+                self.update_points_display()
+                print("Button clicked")
+                # self.player1.state = 0
+                # self.player2.state = 1
+                # if self.player1.state == 0 and self.player2.state == 1:
+                #     self.process_computers_turn()
 
 
-    def play(self):
+    def play_game(self):
         print(f"self.player1.state='{self.player1.state}'")
         print(f"self.player2.state='{self.player2.state}'")
-        # if self.player1.state == 0 and self.player2.state == 1:
+        if self.player1.state == 0 and self.player2.state == 1:
+            self.process_computers_turn()
 
-        self.process_computers_turn()
-        self.play()
+
 
 
 class Player:
