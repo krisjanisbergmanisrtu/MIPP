@@ -4,6 +4,9 @@ from collections import namedtuple
 import random
 from tree import *
 from minimax import *
+# import sys
+# import time
+# sys.setrecursionlimit(10**6)
 
 class BinaryGame:
     def __init__(self, root):
@@ -165,7 +168,18 @@ class BinaryGame:
 
     def process_computers_turn(self):
         # Implement logic to process the computer's turn here
-        pass  # Placeholder; replace with actual logic
+        # Placeholder; replace with actual logic
+        print('Computers turn')
+        # self.buttons[0].config(bg="light gray")
+        self.buttons[0].invoke()
+        # self.buttons[1].config(bg="light gray")
+        self.buttons[1].invoke()
+        self.player2.state = 0
+        self.player1.state = 1
+        print("Computers turn done")
+        # time.sleep(2000)
+
+        return
 
     def convert_to_binary_and_display(self):
         try:
@@ -201,7 +215,11 @@ class BinaryGame:
             self.buttons.append(button)
         self.fill_tree()
 
+
+        self.play()
+
     def on_button_click(self, index):
+        print(f"button with index'{index}' was clicked")
         if self.is_players_turn():
             if index in self.clicked_buttons:
                 return  # ignore if this button was already clicked
@@ -244,8 +262,20 @@ class BinaryGame:
                     print(self.player1.points)
                     print(self.player2.points)
                     self.update_points_display()
+                    print("Button clicked")
+                    # self.player1.state = 0
+                    # self.player2.state = 1
+                    # if self.player1.state == 0 and self.player2.state == 1:
+                    #     self.process_computers_turn()
 
 
+    def play(self):
+        print(f"self.player1.state='{self.player1.state}'")
+        print(f"self.player2.state='{self.player2.state}'")
+        # if self.player1.state == 0 and self.player2.state == 1:
+
+        self.process_computers_turn()
+        self.play()
 
 
 class Player:
