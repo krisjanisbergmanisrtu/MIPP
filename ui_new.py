@@ -1,14 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
-from collections import namedtuple
 import random
 from tree import *
 from minimax import *
 
-
-# import sys
-# import time
-# sys.setrecursionlimit(10**6)
 
 class BinaryGame:
     def __init__(self, root):
@@ -35,6 +30,7 @@ class BinaryGame:
         self.add_points = False
 
     def setup_gui(self):
+
         # Setup player choice frame
         self.setup_player_frame()
 
@@ -46,6 +42,9 @@ class BinaryGame:
 
         # Setup binary sequence frame
         self.setup_binary_frame()
+
+        # Setup info frame
+        self.setup_info_frame()
 
         # Setup result frame
         self.setup_result_frame()
@@ -84,23 +83,25 @@ class BinaryGame:
         self.binary_frame = tk.Frame(self.root)
         self.binary_frame.pack(pady=10)
 
+    def setup_info_frame(self):
+        self.info_frame = tk.Frame(self.root)
+        self.info_frame.pack(pady=5)
+        tk.Label(self.info_frame, text="Starting game as player:").grid(row=1, column=1)
+        self.label_init_player = tk.Label(self.info_frame, text="")
+        self.label_init_player.grid(row=1, column=2)
+        tk.Label(self.info_frame, text="Computer is using algorithm:").grid(row=2, column=1)
+        self.label_init_algo = tk.Label(self.info_frame, text="")
+        self.label_init_algo.grid(row=2, column=2)
+        tk.Label(self.info_frame, text="Current player:").grid(row=3, column=1)
+        self.label_cur_player = tk.Label(self.info_frame, text="")
+        self.label_cur_player.grid(row=3, column=2)
+
     def setup_result_frame(self):
         self.result_frame = tk.Frame(self.root)
         self.result_frame.pack(pady=20)
 
         self.end_result_label = tk.Label(self.result_frame, text="Game ongoing")
         self.end_result_label.pack(fill="none", expand=True)
-
-    def setup_input_frame(self):
-        self.input_frame = tk.Frame(self.root)
-        self.input_frame.pack(pady=20)
-
-        tk.Label(self.input_frame, text="Enter length for sequence generation (15-25):").pack(side=tk.LEFT)
-
-        self.entry = tk.Entry(self.input_frame, width=5)
-        self.entry.pack(side=tk.LEFT, padx=10)
-
-        tk.Button(self.input_frame, text="Convert", command=self.convert_to_binary_and_display).pack(side=tk.LEFT)
 
     def setup_binary_frame(self):
         self.binary_frame = tk.Frame(self.root)
@@ -121,6 +122,12 @@ class BinaryGame:
 
         # Update points display
         self.update_points_display()
+
+    def update_active_player(self):
+        if self.human.state == 0 and self.computer.state == 1:
+            self.label_cur_player.config(text="computer", fg="red")
+        else:
+            self.label_cur_player.config(text="human", fg="red")
 
     def display_player_points(self):
         # Display points for each player
@@ -147,11 +154,13 @@ class BinaryGame:
             self.player2 = self.human
             self.computer.state = 1
             self.human.state = 0
-
+        self.label_init_player.config(text=f"{player}", fg="red")
+        self.label_cur_player.config(text=f"{player}", fg="red")
         print(self.player1.type + ' is starting the game')
 
     def algo_choice(self, algo):
         self.algorithm = algo
+        self.label_init_algo.config(text=f"{algo}", fg="red")
         print('Algorithm is ' + algo)
 
     def gen_rand_sequence(self, length):
@@ -180,14 +189,16 @@ class BinaryGame:
         # Implement logic to process the computer's turn here
         # Placeholder; replace with actual logic
         print('Computers turn')
-        # self.buttons[0].config(bg="light gray")
-        self.buttons[0].invoke()
-        self.buttons[1].invoke()
-        self.computer.state = 0
-        self.human.state = 1
-        print(f"self.computer.state set to'{self.computer.state}'\nself.computer.state set to'{self.computer.state}'")
-        # self.buttons[1].config(bg="light gray")
-        print("Computers turn done")
+        if len(self.buttons) > 1:
+            self.buttons[0].config(bg="light gray")
+            self.buttons[0].invoke()
+            self.buttons[1].config(bg="light gray")
+            self.buttons[1].invoke()
+            self.computer.state = 0
+            self.human.state = 1
+            print(f"self.computer.state set to'{self.computer.state}'\nself.computer.state set to'{self.computer.state}'")
+            print("Computers turn done")
+            self.update_active_player()
         # time.sleep(2000)
 
         return
@@ -227,6 +238,7 @@ class BinaryGame:
         self.fill_tree()
 
     def on_button_click(self, index):
+        self.buttons[index].config(bg="light gray")
         if self.computer.state == 1 and self.human.state == 0:
             print(f"button with index'{index}' was clicked by Computer")
         else:
@@ -279,13 +291,13 @@ class BinaryGame:
                 if self.human.state == 1 and self.computer.state == 0:
                     self.human.state = 0
                     self.computer.state = 1
+                    self.update_active_player()
                     print("Humans turn done")
                     self.play_game()
 
     def play_game(self):
-        print(f"self.human.state='{self.human.state}'")
-        print(f"self.computer.state='{self.computer.state}'")
         if self.human.state == 0 and self.computer.state == 1:
+            self.update_active_player()
             self.process_computers_turn()
         else:
             print("humans turn")
