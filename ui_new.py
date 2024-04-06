@@ -4,6 +4,8 @@ from collections import namedtuple
 import random
 from tree import *
 from minimax import *
+
+
 # import sys
 # import time
 # sys.setrecursionlimit(10**6)
@@ -31,6 +33,7 @@ class BinaryGame:
         self.algorithm = ''
         self.tree = tree
         self.add_points = False
+
     def setup_gui(self):
         # Setup player choice frame
         self.setup_player_frame()
@@ -63,7 +66,8 @@ class BinaryGame:
         tk.Label(self.algorithm_frame, text="Choose an algorithm").pack(side=tk.LEFT)
 
         tk.Button(self.algorithm_frame, text="Min-max", command=lambda: self.algo_choice('minmax')).pack(side=tk.LEFT)
-        tk.Button(self.algorithm_frame, text="Alpha-beta", command=lambda: self.algo_choice('alpha-beta')).pack(side=tk.LEFT)
+        tk.Button(self.algorithm_frame, text="Alpha-beta", command=lambda: self.algo_choice('alpha-beta')).pack(
+            side=tk.LEFT)
 
     def setup_input_frame(self):
         self.input_frame = tk.Frame(self.root)
@@ -152,19 +156,21 @@ class BinaryGame:
 
     def gen_rand_sequence(self, length):
         return ''.join(str(random.randint(0, 1)) for _ in range(length))
+
     def fill_tree(self):
         init_tree(self.binary_str)
         self.tree = tree
         self.prev_node = tree[0]
+
     def gen_nodes(self):
-        gen_node(self.prev_node,3)
-        self.tree = tree
-    def clear_tree(self):
-        self.prev_node = tree[0]
-        self.prev_node = self.prev_node._replace(indx=0,parent_indx=-1)
-        tree.clear()
+        gen_node(self.prev_node, 3)
         self.tree = tree
 
+    def clear_tree(self):
+        self.prev_node = tree[0]
+        self.prev_node = self.prev_node._replace(indx=0, parent_indx=-1)
+        tree.clear()
+        self.tree = tree
 
     def is_players_turn(self):
         # Check if it's the player's turn
@@ -175,13 +181,12 @@ class BinaryGame:
         # Placeholder; replace with actual logic
         print('Computers turn')
         # self.buttons[0].config(bg="light gray")
+        self.buttons[0].invoke()
+        self.buttons[1].invoke()
         self.computer.state = 0
         self.human.state = 1
-        self.buttons[0].invoke()
+        print(f"self.computer.state set to'{self.computer.state}'\nself.computer.state set to'{self.computer.state}'")
         # self.buttons[1].config(bg="light gray")
-
-        self.buttons[1].invoke()
-
         print("Computers turn done")
         # time.sleep(2000)
 
@@ -198,13 +203,12 @@ class BinaryGame:
 
         self.binary_str = self.gen_rand_sequence(length)
         self.display_binary_sequence()
-        #self.tree[0] = self.prev_node
+        # self.tree[0] = self.prev_node
         print(self.binary_str)
         self.level_counter += 1
         self.fill_tree()
-        #gen_node(self.tree[0],3)
+        # gen_node(self.tree[0],3)
         self.play_game()
-
 
     def display_binary_sequence(self):
         if not self.player1.type or not self.algorithm:
@@ -222,9 +226,11 @@ class BinaryGame:
             self.buttons.append(button)
         self.fill_tree()
 
-
     def on_button_click(self, index):
-        print(f"button with index'{index}' was clicked")
+        if self.computer.state == 1 and self.human.state == 0:
+            print(f"button with index'{index}' was clicked by Computer")
+        else:
+            print(f"button with index'{index}' was clicked by Human")
         # if self.is_players_turn():
         if index in self.clicked_buttons:
             return  # ignore if this button was already clicked
@@ -235,7 +241,8 @@ class BinaryGame:
             if abs(self.clicked_buttons[0] - self.clicked_buttons[1]) == 1:  # check if clicked btns adjacent
                 new_str = ''
                 keep_bit = min(self.clicked_buttons)
-                clicked_str = str(self.buttons[self.clicked_buttons[0]].cget('text')) + " " + str(self.buttons[self.clicked_buttons[1]].cget('text'))
+                clicked_str = str(self.buttons[self.clicked_buttons[0]].cget('text')) + " " + str(
+                    self.buttons[self.clicked_buttons[1]].cget('text'))
                 new_bit = {
                     "0 1": "0",
                     "0 0": "1",
@@ -254,11 +261,11 @@ class BinaryGame:
                 self.level_counter += 1
                 self.gen_nodes()
                 for node in tree:
-                    if str(node.value) == new_str and self.prev_node==0:
+                    if str(node.value) == new_str and self.prev_node == 0:
                         self.prev_node = node
-                    if str(node.value) == new_str and node.parent_indx==self.prev_node.indx:
+                    if str(node.value) == new_str and node.parent_indx == self.prev_node.indx:
                         self.prev_node = node
-                if self.level_counter % 3 == 0 and self.level_counter!=0:
+                if self.level_counter % 3 == 0 and self.level_counter != 0:
                     print(self.prev_node)
                     self.clear_tree()
                 print(self.prev_node)
@@ -268,13 +275,12 @@ class BinaryGame:
                 print(self.player2.points)
                 self.update_points_display()
                 print("Button clicked")
-                               #
+                #
                 if self.human.state == 1 and self.computer.state == 0:
                     self.human.state = 0
                     self.computer.state = 1
                     print("Humans turn done")
-                # self.play_game()
-
+                    self.play_game()
 
     def play_game(self):
         print(f"self.human.state='{self.human.state}'")
@@ -285,13 +291,12 @@ class BinaryGame:
             print("humans turn")
 
 
-
-
 class Player:
     def __init__(self):
         self.type = ''
         self.points = 0
         self.state = 0
+
 
 root = tk.Tk()
 game = BinaryGame(root)
