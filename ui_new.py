@@ -278,14 +278,14 @@ class BinaryGame:
     def convert_to_binary_and_display(self):
         try:
             length = int(self.entry.get())
-            if not 3 <= length <= 25:
+            if not 15 <= length <= 25:
                 raise ValueError("Number out of range")
         except ValueError:
             messagebox.showerror("Invalid Input", "Please enter a valid integer between 15 and 25.")
             return
 
-        # self.binary_str = self.gen_rand_sequence(length)
-        self.binary_str = "101"  # This line is for testing
+        self.binary_str = self.gen_rand_sequence(length)
+        # self.binary_str = "101"  # This line is for testing
         self.display_binary_sequence()
         # self.tree[0] = self.prev_node
         print(self.binary_str)
