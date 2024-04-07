@@ -194,10 +194,11 @@ class BinaryGame:
         # init_tree(self.binary_str)
         if self.prev_node != 0:
             init_tree(getattr(self.prev_node, 'value'))
+            self.tree = tree
         else:
             init_tree(self.binary_str)
-        self.tree = tree
-        self.prev_node = self.tree[0]
+            self.tree = tree
+            self.prev_node = self.tree[0]
         self.gen_nodes()
 
     def gen_nodes(self):
@@ -207,8 +208,12 @@ class BinaryGame:
     def clear_tree(self):
         # self.prev_node = tree[0]
         # self.refresh_prev_node()
+        temp_level = 0
         if (self.prev_node != 0):
-            self.prev_node = self.prev_node._replace(indx=0, parent_indx=-1)
+            # If level is odd number then point assignment will flip unless we make it odd now
+            if (self.prev_node.level % 2 != 0):
+                temp_level = 1
+            self.prev_node = self.prev_node._replace(indx=0, parent_indx=-1, level=temp_level)
         tree.clear()
         self.tree = tree
         self.best_state_index = 0
@@ -222,6 +227,7 @@ class BinaryGame:
         # selected_node = self.game_states[self.best_state_index + 1]
         cur_player = self.label_cur_player.cget("text")
         best_combo_indxs = getattr(self.node_to_select, 'best_combo_indxs')[0]
+        print("update_game_log()")
         print(f"self.prev_node = {self.prev_node}")
         print(f"self.node_to_select = {self.node_to_select}")
 
@@ -273,7 +279,7 @@ class BinaryGame:
 
             self.game_states = [self.tree[idx] for idx in best_path]
             self.game_states_vals = [self.tree[idx].value for idx in best_path]
-            print(f"game_states\n{self.game_states_vals}")
+            # print(f"game_states\n{self.game_states_vals}")
             index0 = getattr(self.game_states[self.best_state_index + 1], 'best_combo_indxs')[0]
             index1 = getattr(self.game_states[self.best_state_index + 1], 'best_combo_indxs')[1]
             print(index1)
@@ -284,8 +290,8 @@ class BinaryGame:
             self.computer.state = 0
             self.human.state = 1
 
-            print(
-                f"self.computer.state set to'{self.computer.state}'\nself.computer.state set to'{self.computer.state}'")
+            # print(
+            #     f"self.computer.state set to'{self.computer.state}'\nself.computer.state set to'{self.computer.state}'")
             print("Computers turn done")
             self.update_active_player()
             end_time = time.time()
@@ -304,7 +310,7 @@ class BinaryGame:
             return
 
         self.binary_str = self.gen_rand_sequence(length)
-        # self.binary_str = "101"  # This line is for testing
+        # self.binary_str = "10100"  # This line is for testing
         self.display_binary_sequence()
         # self.tree[0] = self.prev_node
         print(self.binary_str)
@@ -344,7 +350,6 @@ class BinaryGame:
             return  # ignore if this button was already clicked
         self.clicked_buttons.append(index)
 
-        new_str = self.binary_str
         if len(self.clicked_buttons) == 2:  # if exactly two btns have been clicked
             if abs(self.clicked_buttons[0] - self.clicked_buttons[1]) == 1:  # check if clicked btns adjacent
                 new_str = ''
@@ -369,11 +374,19 @@ class BinaryGame:
                 self.level_counter += 1
                 # self.gen_nodes()
 
+                # string = "mid0"
                 for node in tree:
                     if str(node.value) == new_str and self.prev_node == 0:
                         self.set_node_to_select(node)
+                        print(f"onbuttonclick1.self.prev_node = {self.prev_node}")
+                        # string = "mid1"
                     if str(node.value) == new_str and node.parent_indx == getattr(self.prev_node, 'indx'):
                         self.set_node_to_select(node)
+                        print(f"onbuttonclick2.self.prev_node = {self.prev_node}")
+                        # string = "mid2"
+                # print(string)
+                # print(f"self.prev_node = {self.prev_node}")
+                # print(f"self.node_to_select = {self.node_to_select}")
 
                 self.update_game_log()
                 self.refresh_prev_node()
@@ -381,13 +394,18 @@ class BinaryGame:
                 print("Button clicked")
 
                 if self.level_counter % MAX_VISIBILITY == 0 and self.level_counter != 0:
-                    print(self.node_to_select)
+                    # print(self.node_to_select)
+                    temp_p1_points = self.prev_node.p1_points
+                    temp_p2_points = self.prev_node.p2_points
+                    temp_heuristic = self.prev_node.heuristic_val
                     self.clear_tree()
+                    self.set_node_vals(temp_p1_points, temp_p2_points, temp_heuristic)
                     self.fill_tree()
                     self.gen_nodes()
-                print(self.node_to_select)
-                self.player1.points = self.node_to_select.p1_points
-                self.player2.points = self.node_to_select.p2_points
+                else:
+                    self.player1.points = self.node_to_select.p1_points
+                    self.player2.points = self.node_to_select.p2_points
+
                 print(self.player1.points)
                 print(self.player2.points)
 
@@ -397,7 +415,7 @@ class BinaryGame:
                     self.update_active_player()
                     print("Humans turn done")
                     print(len(tree))
-                    if(len(tree)<1):
+                    if (len(tree) < 1):
                         self.fill_tree()
                         self.gen_nodes()
                     self.play_game()
@@ -422,7 +440,7 @@ class BinaryGame:
     def check_results(self):
         print("node to select")
         print(self.node_to_select)
-        #if self.node_to_select != 0 and len(getattr(self.node_to_select, 'value')) < 2:
+        # if self.node_to_select != 0 and len(getattr(self.node_to_select, 'value')) < 2:
         if self.node_to_select != 0 and len(self.buttons) < 2:
             print("Calculating game result")
             end_label = f"Average computer turn time: {calculate_average_time()}ms"
@@ -437,6 +455,15 @@ class BinaryGame:
                 end_label = f"{self.player1.type} Won! {end_label}"
             self.end_result_label.config(text=f"{end_label}", bg="light gray")
             print("GAME OVER!")
+
+    # def setPoints(self, temp_p1_points, temp_p2_points):
+    #     self.prev_node.p1_points = temp_p1_points
+    #     self.prev_node.p2_points = temp_p2_points
+
+    def set_node_vals(self, temp_p1_points, temp_p2_points, temp_heuristic):
+        self.prev_node = self.prev_node._replace(p1_points=temp_p1_points,
+                                                 p2_points=temp_p2_points, heuristic_val=temp_heuristic)
+
 
 class Player:
     def __init__(self):
