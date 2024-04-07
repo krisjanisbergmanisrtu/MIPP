@@ -15,7 +15,7 @@ class BinaryGame:
         self.game_states = None
         self.root = root
         self.root.title("Binary Game")
-        self.root.geometry("600x400")
+        self.root.geometry("800x600")
         # Player setup
         self.player1 = Player()
         self.player2 = Player()
@@ -116,9 +116,8 @@ class BinaryGame:
         self.label_selected_combo_1.grid(row=4, column=3, padx=5, sticky="ew")
         self.label_selected_combo_2.grid(row=4, column=4, padx=5, sticky="w")
         self.computer_time.grid(row=5, column=1)
-        self.end_result_label.grid(row=6, column=1)
-        #
-        # self.point_change.grid(row=6, column=1)
+        self.point_change.grid(row=6, column=1)
+        self.end_result_label.grid(row=7, column=1)
 
     def setup_result_frame(self):
         self.result_frame = tk.Frame(self.root)
@@ -236,7 +235,25 @@ class BinaryGame:
         self.label_selected_combo_1.config(fg="red", text=f"{selected_combo_1_0}{selected_combo_1_1}")
         self.label_selected_combo_2.config(fg="blue", text=f"{selected_combo_2}")
 
-        # point_change.config(fg=4, column=5)
+        combo = f"{getattr(self.prev_node, 'value')[best_combo_indxs]}{getattr(self.prev_node, 'value')[best_combo_indxs + 1]}"
+        if getattr(self.prev_node, 'level') % 2 != 0:
+            p_active = self.player2
+            p_waiting = self.player1
+        else:
+            p_active = self.player1
+            p_waiting = self.player2
+
+        point_change = ""
+        if combo == "00":
+            point_change = f"+1 point to {p_active.type}"
+        elif combo == "01":
+            point_change = f"+1 point to {p_waiting.type}"
+        elif combo == "10":
+            point_change = f"-1 point from {p_waiting.type}"
+        elif combo == "11":
+            point_change = f"+1 point to {p_active.type}"
+
+        self.point_change.config(fg="blue", text=f"{point_change}")
         return
 
     def update_game_log_computer_time(self):
@@ -278,6 +295,7 @@ class BinaryGame:
     def convert_to_binary_and_display(self):
         try:
             length = int(self.entry.get())
+            # if not 3 <= length <= 25:
             if not 15 <= length <= 25:
                 raise ValueError("Number out of range")
         except ValueError:
