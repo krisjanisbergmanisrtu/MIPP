@@ -393,6 +393,9 @@ class BinaryGame:
                     self.computer.state = 1
                     self.update_active_player()
                     print("Humans turn done")
+                    if(len(tree)<1):
+                        self.fill_tree()
+                        self.gen_nodes()
                     self.play_game()
                     print(f"self.best_state_index  = {self.best_state_index}")
 
