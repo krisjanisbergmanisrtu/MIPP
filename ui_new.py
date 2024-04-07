@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
 import random
+
+from alpha_beta import alpha_beta
 from tree import *
 from minimax import *
 
@@ -18,6 +20,7 @@ class BinaryGame:
         self.computer = Player()
         self.computer.type = 'Computer'
         self.level_counter = 0
+        self.best_state_index = 0
         # GUI elements
         self.setup_gui()
 
@@ -167,12 +170,14 @@ class BinaryGame:
         return ''.join(str(random.randint(0, 1)) for _ in range(length))
 
     def fill_tree(self):
+        # init_tree("10100")
         init_tree(self.binary_str)
         self.tree = tree
         self.prev_node = tree[0]
+        self.gen_nodes()
 
     def gen_nodes(self):
-        gen_node(self.prev_node, 3)
+        gen_node(self.prev_node, MAX_VISIBILITY)
         self.tree = tree
 
     def clear_tree(self):
@@ -180,6 +185,7 @@ class BinaryGame:
         self.prev_node = self.prev_node._replace(indx=0, parent_indx=-1)
         tree.clear()
         self.tree = tree
+        self.best_state_index = 0
 
     def is_players_turn(self):
         # Check if it's the player's turn
@@ -190,16 +196,25 @@ class BinaryGame:
         # Placeholder; replace with actual logic
         print('Computers turn')
         if len(self.buttons) > 1:
-            self.buttons[0].config(bg="light gray")
-            self.buttons[0].invoke()
-            self.buttons[1].config(bg="light gray")
-            self.buttons[1].invoke()
+            if self.algorithm == 'minmax':
+                best_path, best_value = minimax(tree[0], 0, True)
+            elif self.algorithm == 'alpha-beta':
+                best_path, best_value = alpha_beta(tree[0], float('-inf'), float('inf'), MAX_VISIBILITY)
+
+            game_states = [tree[idx] for idx in best_path]
+            print(f"game_states\n{game_states}")
+            index0 = getattr(game_states[self.best_state_index + 1], 'best_combo_indxs')[0]
+            index1 = getattr(game_states[self.best_state_index + 1], 'best_combo_indxs')[1]
+            self.buttons[index0].config(bg="light gray")
+            self.buttons[index0].invoke()
+            self.buttons[index1].config(bg="light gray")
+            self.buttons[index1].invoke()
             self.computer.state = 0
             self.human.state = 1
             print(f"self.computer.state set to'{self.computer.state}'\nself.computer.state set to'{self.computer.state}'")
             print("Computers turn done")
             self.update_active_player()
-        # time.sleep(2000)
+            self.best_state_index=self.best_state_index+1
 
         return
 

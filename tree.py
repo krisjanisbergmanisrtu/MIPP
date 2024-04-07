@@ -5,7 +5,7 @@
 from collections import namedtuple
 
 # Static variable that is hardcoded to represent max visibility
-MAX_VISIBILITY = 5
+MAX_VISIBILITY = 4
 
 # value - digit string - actual game tree property
 # p1_points - player 1 points - actual game tree property

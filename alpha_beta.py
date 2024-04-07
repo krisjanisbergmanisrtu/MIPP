@@ -35,39 +35,39 @@ def alpha_beta(node, alpha, beta, max_visibility, path=[]):
 
 
 # Initialize the tree
-init_tree("1010")
-gen_node(tree[0], MAX_VISIBILITY)
+# init_tree("1010")
+# gen_node(tree[0], MAX_VISIBILITY)
 
 # Perform alpha-beta pruning
-best_path, best_value = alpha_beta(tree[0], float('-inf'), float('inf'), MAX_VISIBILITY)
+# best_path, best_value = alpha_beta(tree[0], float('-inf'), float('inf'), MAX_VISIBILITY)
 
 # TESTING
-print("Best path:", best_path)
-print("Best heuristic value:", best_value)
-print("Number of nodes in the tree:", len(tree))
+# print("Best path:", best_path)
+# print("Best heuristic value:", best_value)
+# print("Number of nodes in the tree:", len(tree))
 
 # Extract the game state representation from each node in the best path
-game_states = [tree[idx].value for idx in best_path]
-print("Path through game states:", " -> ".join(game_states))
+# game_states = [tree[idx].value for idx in best_path]
+# print("Path through game states:", " -> ".join(game_states))
 
-if best_path:
-    # Get the index of the last node in the best path
-    last_node_index = best_path[-1]
-    # Access the node from the tree using this index
-    last_node = tree[last_node_index]
+# if best_path:
+#     # Get the index of the last node in the best path
+#     last_node_index = best_path[-1]
+#     # Access the node from the tree using this index
+#     last_node = tree[last_node_index]
 
     # Print the details of the last node
-    print(f"Node(value='{last_node.value}', p1_points={last_node.p1_points}, p2_points={last_node.p2_points}, level={last_node.level}, indx={last_node.indx}, parent_indx={last_node.parent_indx}, children_indxs={last_node.children_indxs}, heuristic_val={last_node.heuristic_val})")
+    # print(f"Node(value='{last_node.value}', p1_points={last_node.p1_points}, p2_points={last_node.p2_points}, level={last_node.level}, indx={last_node.indx}, parent_indx={last_node.parent_indx}, children_indxs={last_node.children_indxs}, heuristic_val={last_node.heuristic_val})")
 # TESTING
+#
+# print(len(tree))
+# print(tree)
 
-print(len(tree))
-print(tree)
 
-
-alpha = Node(value="", p1_points=0, p2_points=0, level=0, indx=0, parent_indx=-1,
-             children_indxs=[], heuristic_val=float('-inf'))
-beta = Node(value="", p1_points=0, p2_points=0, level=0, indx=0, parent_indx=-1,
-            children_indxs=[], heuristic_val=float('inf'))
+# alpha = Node(value="", p1_points=0, p2_points=0, level=0, indx=0, parent_indx=-1,
+#              children_indxs=[], heuristic_val=float('-inf'))
+# beta = Node(value="", p1_points=0, p2_points=0, level=0, indx=0, parent_indx=-1,
+#             children_indxs=[], heuristic_val=float('inf'))
 
 # init_tree('1010')  # This is used for testing
 # gen_node(tree[0], MAX_VISIBILITY)  # This is used for testing
