@@ -271,11 +271,12 @@ class BinaryGame:
             elif self.algorithm == 'alpha-beta':
                 best_path, best_value = alpha_beta(tree[0], float('-inf'), float('inf'), MAX_VISIBILITY)
 
-            self.game_states = [tree[idx] for idx in best_path]
-            self.game_states_vals = [tree[idx].value for idx in best_path]
+            self.game_states = [self.tree[idx] for idx in best_path]
+            self.game_states_vals = [self.tree[idx].value for idx in best_path]
             print(f"game_states\n{self.game_states_vals}")
             index0 = getattr(self.game_states[self.best_state_index + 1], 'best_combo_indxs')[0]
             index1 = getattr(self.game_states[self.best_state_index + 1], 'best_combo_indxs')[1]
+            print(index1)
             self.buttons[index0].config(bg="light gray")
             self.buttons[index0].invoke()
             self.buttons[index1].config(bg="light gray")
@@ -382,6 +383,8 @@ class BinaryGame:
                 if self.level_counter % MAX_VISIBILITY == 0 and self.level_counter != 0:
                     print(self.node_to_select)
                     self.clear_tree()
+                    self.fill_tree()
+                    self.gen_nodes()
                 print(self.node_to_select)
                 self.player1.points = self.node_to_select.p1_points
                 self.player2.points = self.node_to_select.p2_points
@@ -393,6 +396,7 @@ class BinaryGame:
                     self.computer.state = 1
                     self.update_active_player()
                     print("Humans turn done")
+                    print(len(tree))
                     if(len(tree)<1):
                         self.fill_tree()
                         self.gen_nodes()
@@ -402,6 +406,7 @@ class BinaryGame:
                 self.check_results()
 
     def refresh_prev_node(self):
+        print('refreshed_prev_node')
         self.prev_node = self.node_to_select
 
     def set_node_to_select(self, node):
