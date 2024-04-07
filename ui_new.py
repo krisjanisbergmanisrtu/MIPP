@@ -170,7 +170,7 @@ class BinaryGame:
         return ''.join(str(random.randint(0, 1)) for _ in range(length))
 
     def fill_tree(self):
-        # init_tree("10100")
+        self.binary_str = "10100"
         init_tree(self.binary_str)
         self.tree = tree
         self.prev_node = tree[0]
@@ -202,7 +202,8 @@ class BinaryGame:
                 best_path, best_value = alpha_beta(tree[0], float('-inf'), float('inf'), MAX_VISIBILITY)
 
             game_states = [tree[idx] for idx in best_path]
-            print(f"game_states\n{game_states}")
+            game_states_vals = [tree[idx].value for idx in best_path]
+            print(f"game_states\n{game_states_vals}")
             index0 = getattr(game_states[self.best_state_index + 1], 'best_combo_indxs')[0]
             index1 = getattr(game_states[self.best_state_index + 1], 'best_combo_indxs')[1]
             self.buttons[index0].config(bg="light gray")
@@ -292,7 +293,7 @@ class BinaryGame:
                         self.prev_node = node
                     if str(node.value) == new_str and node.parent_indx == self.prev_node.indx:
                         self.prev_node = node
-                if self.level_counter % 3 == 0 and self.level_counter != 0:
+                if self.level_counter % MAX_VISIBILITY == 0 and self.level_counter != 0:
                     print(self.prev_node)
                     self.clear_tree()
                 print(self.prev_node)
