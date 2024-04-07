@@ -415,7 +415,10 @@ class BinaryGame:
             print("humans turn")
 
     def check_results(self):
-        if self.node_to_select != 0 and len(getattr(self.node_to_select, 'value')) < 2:
+        print("node to select")
+        print(self.node_to_select)
+        #if self.node_to_select != 0 and len(getattr(self.node_to_select, 'value')) < 2:
+        if self.node_to_select != 0 and len(self.buttons) < 2:
             print("Calculating game result")
             end_label = f"Average computer turn time: {calculate_average_time()}ms"
             node = self.node_to_select
@@ -429,7 +432,6 @@ class BinaryGame:
                 end_label = f"{self.player1.type} Won! {end_label}"
             self.end_result_label.config(text=f"{end_label}", bg="light gray")
             print("GAME OVER!")
-
 
 class Player:
     def __init__(self):
