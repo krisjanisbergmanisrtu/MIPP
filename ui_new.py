@@ -136,11 +136,11 @@ class BinaryGame:
 
         # Add text boxes for showing points for each player
         tk.Label(self.result_frame, text="Player 1 Points:").pack(side=tk.LEFT)
-        self.player1_points_text = tk.Text(self.result_frame, height=1, width=5)
+        self.player1_points_text = tk.Label(self.result_frame, height=1, width=5)
         self.player1_points_text.pack(side=tk.LEFT)
 
         tk.Label(self.result_frame, text="Player 2 Points:").pack(side=tk.LEFT)
-        self.player2_points_text = tk.Text(self.result_frame, height=1, width=5)
+        self.player2_points_text = tk.Label(self.result_frame, height=1, width=5)
         self.player2_points_text.pack(side=tk.LEFT)
 
         # Update points display
@@ -155,17 +155,17 @@ class BinaryGame:
 
     def display_player_points(self):
         # Display points for each player
-        self.player1_points_text.delete(1.0, tk.END)
-        self.player1_points_text.insert(tk.END, str(self.player1_points))
-        self.player2_points_text.delete(1.0, tk.END)
-        self.player2_points_text.insert(tk.END, str(self.player2_points))
+        self.update_points_display()
 
     def update_points_display(self):
         # Update points display
-        self.player1_points_text.delete(1.0, tk.END)
-        self.player1_points_text.insert(tk.END, str(self.player1.points))
-        self.player2_points_text.delete(1.0, tk.END)
-        self.player2_points_text.insert(tk.END, str(self.player2.points))
+        if hasattr(self, 'prev_node'):
+            if self.prev_node != 0:
+                self.player1_points_text.config(text=f"{getattr(self.prev_node, 'p1_points')}")
+                self.player2_points_text.config(text=f"{getattr(self.prev_node, 'p2_points')}")
+            else:
+                self.player1_points_text.config(text="0")
+                self.player2_points_text.config(text="0")
 
     def player_choice(self, player):
         if player == 'human':
@@ -424,7 +424,7 @@ class BinaryGame:
                 end_label = f"{self.player1.type} Won! {end_label}"
             elif p2_points > p1_points:
                 end_label = f"{self.player1.type} Won! {end_label}"
-            self.end_result_label.config(text=f"{end_label}")
+            self.end_result_label.config(text=f"{end_label}", bg="light gray")
             print("GAME OVER!")
 
 
