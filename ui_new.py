@@ -3,8 +3,10 @@ from tkinter import messagebox
 import random
 
 from alpha_beta import alpha_beta
+from game import computer_turn_time, calculate_average_time
 from tree import *
 from minimax import *
+import time
 
 
 class BinaryGame:
@@ -34,6 +36,7 @@ class BinaryGame:
         self.algorithm = ''
         self.tree = tree
         self.add_points = False
+        self.turn_time = 0
 
     def setup_gui(self):
 
@@ -106,18 +109,23 @@ class BinaryGame:
         self.label_selected_combo_1 = tk.Label(self.info_frame, text="", anchor="center")
         self.label_selected_combo_2 = tk.Label(self.info_frame, text="", anchor="w")
         self.point_change = tk.Label(self.info_frame, text="")
+        self.computer_time = tk.Label(self.info_frame, text="")
+        self.end_result_label = tk.Label(self.info_frame, text="")
         self.label_player_selected.grid(row=4, column=1, padx=5, sticky="e")
         self.label_selected_combo_0.grid(row=4, column=2, padx=5, sticky="ew")
         self.label_selected_combo_1.grid(row=4, column=3, padx=5, sticky="ew")
         self.label_selected_combo_2.grid(row=4, column=4, padx=5, sticky="w")
-        self.point_change.grid(row=5, column=1)
+        self.computer_time.grid(row=5, column=1)
+        self.end_result_label.grid(row=6, column=1)
+        #
+        # self.point_change.grid(row=6, column=1)
 
     def setup_result_frame(self):
         self.result_frame = tk.Frame(self.root)
         self.result_frame.pack(pady=20)
 
-        self.end_result_label = tk.Label(self.result_frame, text="Game ongoing")
-        self.end_result_label.pack(fill="none", expand=True)
+        # self.end_result_label = tk.Label(self.result_frame, text="Game ongoing")
+        # self.end_result_label.pack(fill="none", expand=True)
 
     def setup_binary_frame(self):
         self.binary_frame = tk.Frame(self.root)
@@ -217,15 +225,6 @@ class BinaryGame:
         best_combo_indxs = getattr(self.node_to_select, 'best_combo_indxs')[0]
         print(f"self.prev_node = {self.prev_node}")
         print(f"self.node_to_select = {self.node_to_select}")
-        # print(f"best_combo_indxs = {best_combo_indxs}")
-        # print(f"getattr(self.prev_node, 'value') = {getattr(self.prev_node, 'value')}")
-        # print(f"getattr(self.prev_node, 'value')[:best_combo_indxs] = {getattr(self.prev_node, 'value')[:best_combo_indxs]}")
-        # print(
-        #     f"getattr(self.prev_node, 'value')[best_combo_indxs] = {getattr(self.prev_node, 'value')[best_combo_indxs]}")
-        # print(
-        #     f"getattr(self.prev_node, 'value')[best_combo_indxs+1] = {getattr(self.prev_node, 'value')[best_combo_indxs + 1]}")
-        # print(
-        #     f"getattr(self.prev_node, 'value')[best_combo_indxs+1:] = {getattr(self.prev_node, 'value')[best_combo_indxs + 1:]}")
 
         selected_combo_0 = getattr(self.prev_node, 'value')[:best_combo_indxs]
         selected_combo_1_0 = getattr(self.prev_node, 'value')[best_combo_indxs]
@@ -236,12 +235,18 @@ class BinaryGame:
         self.label_selected_combo_0.config(fg="blue", text=f"{selected_combo_0}")
         self.label_selected_combo_1.config(fg="red", text=f"{selected_combo_1_0}{selected_combo_1_1}")
         self.label_selected_combo_2.config(fg="blue", text=f"{selected_combo_2}")
+
         # point_change.config(fg=4, column=5)
         return
+
+    def update_game_log_computer_time(self):
+        computer_turn_time.append(self.turn_time)
+        self.computer_time.config(text=f"Computer latest turn done in {self.turn_time}ms")
 
     def process_computers_turn(self):
         # Implement logic to process the computer's turn here
         # Placeholder; replace with actual logic
+        start_time = time.time()
         print('Computers turn')
         if len(self.buttons) >= 2:
             if self.algorithm == 'minmax':
@@ -265,20 +270,22 @@ class BinaryGame:
                 f"self.computer.state set to'{self.computer.state}'\nself.computer.state set to'{self.computer.state}'")
             print("Computers turn done")
             self.update_active_player()
-
+            end_time = time.time()
+            self.turn_time = end_time - start_time
+            self.update_game_log_computer_time()
         return
 
     def convert_to_binary_and_display(self):
         try:
             length = int(self.entry.get())
-            if not 4 <= length <= 25:
+            if not 3 <= length <= 25:
                 raise ValueError("Number out of range")
         except ValueError:
             messagebox.showerror("Invalid Input", "Please enter a valid integer between 15 and 25.")
             return
 
         # self.binary_str = self.gen_rand_sequence(length)
-        self.binary_str = "10100"  # This line is for testing
+        self.binary_str = "101"  # This line is for testing
         self.display_binary_sequence()
         # self.tree[0] = self.prev_node
         print(self.binary_str)
@@ -346,7 +353,7 @@ class BinaryGame:
                 for node in tree:
                     if str(node.value) == new_str and self.prev_node == 0:
                         self.set_node_to_select(node)
-                    if str(node.value) == new_str and node.parent_indx == self.node_to_select.indx:
+                    if str(node.value) == new_str and node.parent_indx == getattr(self.prev_node, 'indx'):
                         self.set_node_to_select(node)
 
                 self.update_game_log()
@@ -363,7 +370,6 @@ class BinaryGame:
                 print(self.player1.points)
                 print(self.player2.points)
 
-
                 if self.human.state == 1 and self.computer.state == 0:
                     self.human.state = 0
                     self.computer.state = 1
@@ -371,6 +377,8 @@ class BinaryGame:
                     print("Humans turn done")
                     self.play_game()
                     print(f"self.best_state_index  = {self.best_state_index}")
+
+                self.check_results()
 
     def refresh_prev_node(self):
         self.prev_node = self.node_to_select
@@ -384,6 +392,22 @@ class BinaryGame:
             self.process_computers_turn()
         else:
             print("humans turn")
+
+    def check_results(self):
+        if self.node_to_select != 0 and len(getattr(self.node_to_select, 'value')) < 2:
+            print("Calculating game result")
+            end_label = f"Average computer turn time: {calculate_average_time()}ms"
+            node = self.node_to_select
+            p1_points = getattr(node, 'p1_points')
+            p2_points = getattr(node, 'p2_points')
+            if p1_points == p2_points:
+                end_label = f"Draw! {end_label}"
+            elif p1_points > p2_points:
+                end_label = f"{self.player1.type} Won! {end_label}"
+            elif p2_points > p1_points:
+                end_label = f"{self.player1.type} Won! {end_label}"
+            self.end_result_label.config(text=f"{end_label}")
+            print("GAME OVER!")
 
 
 class Player:
