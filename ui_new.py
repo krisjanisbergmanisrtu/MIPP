@@ -452,7 +452,7 @@ class BinaryGame:
             elif p1_points > p2_points:
                 end_label = f"{self.player1.type} Won! {end_label}"
             elif p2_points > p1_points:
-                end_label = f"{self.player1.type} Won! {end_label}"
+                end_label = f"{self.player2.type} Won! {end_label}"
             self.end_result_label.config(text=f"{end_label}", bg="light gray")
             print("GAME OVER!")
 
