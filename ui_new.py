@@ -199,7 +199,7 @@ class BinaryGame:
             init_tree(self.binary_str)
             self.tree = tree
             self.prev_node = self.tree[0]
-        self.gen_nodes()
+            #self.gen_nodes()
 
     def gen_nodes(self):
         gen_node(self.prev_node, MAX_VISIBILITY)
@@ -309,8 +309,8 @@ class BinaryGame:
             messagebox.showerror("Invalid Input", "Please enter a valid integer between 15 and 25.")
             return
 
-        self.binary_str = self.gen_rand_sequence(length)
-        # self.binary_str = "10100"  # This line is for testing
+        #self.binary_str = self.gen_rand_sequence(length)
+        self.binary_str = "10100"  # This line is for testing
         self.display_binary_sequence()
         # self.tree[0] = self.prev_node
         print(self.binary_str)
@@ -338,6 +338,7 @@ class BinaryGame:
         if self.level_counter == 0:
             self.clear_tree()
             self.fill_tree()
+            self.gen_nodes()
 
     def on_button_click(self, index):
         self.buttons[index].config(bg="light gray")
@@ -375,24 +376,6 @@ class BinaryGame:
                 # self.gen_nodes()
 
                 # string = "mid0"
-                for node in tree:
-                    if str(node.value) == new_str and self.prev_node == 0:
-                        self.set_node_to_select(node)
-                        print(f"onbuttonclick1.self.prev_node = {self.prev_node}")
-                        # string = "mid1"
-                    if str(node.value) == new_str and node.parent_indx == getattr(self.prev_node, 'indx'):
-                        self.set_node_to_select(node)
-                        print(f"onbuttonclick2.self.prev_node = {self.prev_node}")
-                        # string = "mid2"
-                # print(string)
-                # print(f"self.prev_node = {self.prev_node}")
-                # print(f"self.node_to_select = {self.node_to_select}")
-
-                self.update_game_log()
-                self.refresh_prev_node()
-                self.update_points_display()
-                print("Button clicked")
-
                 if self.level_counter % MAX_VISIBILITY == 0 and self.level_counter != 0:
                     # print(self.node_to_select)
                     temp_p1_points = self.prev_node.p1_points
@@ -406,6 +389,42 @@ class BinaryGame:
                     self.player1.points = self.node_to_select.p1_points
                     self.player2.points = self.node_to_select.p2_points
 
+                found_node = False
+                for node in tree:
+                    if str(node.value) == new_str and self.prev_node == 0:
+                        self.set_node_to_select(node)
+                        print(f"onbuttonclick1.self.prev_node = {self.prev_node}")
+                        # string = "mid1"
+                        found_node = True
+                    if str(node.value) == new_str and node.parent_indx == getattr(self.prev_node, 'indx'):
+                        self.set_node_to_select(node)
+                        print(f"onbuttonclick2.self.prev_node = {self.prev_node}")
+                        found_node = True
+                if not found_node:
+                    print(tree)
+                        # string = "mid2"
+                # print(string)
+                # print(f"self.prev_node = {self.prev_node}")
+                # print(f"self.node_to_select = {self.node_to_select}")
+
+                self.update_game_log()
+                self.refresh_prev_node()
+                self.update_points_display()
+                print("Button clicked")
+
+                # if self.level_counter % MAX_VISIBILITY == 0 and self.level_counter != 0:
+                #     # print(self.node_to_select)
+                #     temp_p1_points = self.prev_node.p1_points
+                #     temp_p2_points = self.prev_node.p2_points
+                #     temp_heuristic = self.prev_node.heuristic_val
+                #     self.clear_tree()
+                #     self.set_node_vals(temp_p1_points, temp_p2_points, temp_heuristic)
+                #     self.fill_tree()
+                #     self.gen_nodes()
+                # else:
+                #     self.player1.points = self.node_to_select.p1_points
+                #     self.player2.points = self.node_to_select.p2_points
+
                 print(self.player1.points)
                 print(self.player2.points)
 
@@ -415,9 +434,10 @@ class BinaryGame:
                     self.update_active_player()
                     print("Humans turn done")
                     print(len(tree))
-                    if (len(tree) < 1):
-                        self.fill_tree()
-                        self.gen_nodes()
+                    # if (len(tree) < 1):
+                    #     self.clear_tree()
+                    #     self.fill_tree()
+                    #     self.gen_nodes()
                     self.play_game()
                     print(f"self.best_state_index  = {self.best_state_index}")
 
