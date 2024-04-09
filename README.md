@@ -1,13 +1,22 @@
 # MIPP
 Mākslīgā intelekta pamati, 1. praktiskais darbs
-Notes: Max recommended tree generation level = 8
+Notes: Max recommended tree generation level = 4
 
-TODO <br>
-1) Create GUI - DONE
-2) Create tree - DONE
-3) Create minmax functions
-4) Create Alfa-Beta functions - DONE ? 
-5) Integrate tree generation with UI
-6) Tree generation, add param for max level - DONE
-7) Heuristic functions - DONE
-8) Function for winning path - DONE
+Darba izstrādē piedalījās 
+* Krišjānis Bergmanis
+* Māris Broks
+* Viktorija Grietniece
+* Lauris Senkāns
+
+
+Prasības:
+* Python 3.6.8 vai jaunāks 
+* Ieteicamā operētājsistēma Windows 10 vai Windows 11
+
+Programmas palaišana:
+Atvērt mapi ar projektu kur atrodas fails new_ui.py
+terminālī izpildīt komandu
+```shell
+py .\ui_new.py
+```
+Vai no Integrētās Istrādes Vides (IDE) palaist programmas kodu failā ui_new.py
