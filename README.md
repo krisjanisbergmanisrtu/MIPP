@@ -17,9 +17,16 @@ Programmas palaišana:
 Atvērt mapi ar projektu kur atrodas fails start_game.py
 terminālī izpildīt komandu
 ```shell
-py .\ui_new.py
+py .\start_game.py
 ```
-Vai no Integrētās Istrādes Vides (IDE) palaist programmas kodu failā ui_new.py
+
+vai 
+```shell
+python3 .\start_game.py
+```
+
+
+Vai no Integrētās Istrādes Vides (IDE) palaist programmas kodu failā start_game.py
 
 Brīdinājums: 
 * Spēlē var rasties kļūme, ja izvēlas 2 lauciņus, kuri neatroas blakus viens otram
