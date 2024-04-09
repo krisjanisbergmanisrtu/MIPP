@@ -21,4 +21,6 @@ py .\ui_new.py
 ```
 Vai no Integrētās Istrādes Vides (IDE) palaist programmas kodu failā ui_new.py
 
-Brīdinājums: Spēlē var rasties kļūme, ja izvēlas 2 lauciņus, kuri neatroas blakus viens otram
+Brīdinājums: 
+* Spēlē var rasties kļūme, ja izvēlas 2 lauciņus, kuri neatroas blakus viens otram
+* Ja spēli grib atkārtot, tad ir nepieciešams programmu izpildīt no jauna
