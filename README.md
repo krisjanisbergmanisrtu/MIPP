@@ -14,9 +14,11 @@ Prasības:
 * Ieteicamā operētājsistēma Windows 10 vai Windows 11
 
 Programmas palaišana:
-Atvērt mapi ar projektu kur atrodas fails new_ui.py
+Atvērt mapi ar projektu kur atrodas fails start_game.py
 terminālī izpildīt komandu
 ```shell
 py .\ui_new.py
 ```
 Vai no Integrētās Istrādes Vides (IDE) palaist programmas kodu failā ui_new.py
+
+Brīdinājums: Spēlē var rasties kļūme, ja izvēlas 2 lauciņus, kuri neatroas blakus viens otram

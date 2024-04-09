@@ -309,8 +309,8 @@ class BinaryGame:
             messagebox.showerror("Invalid Input", "Please enter a valid integer between 15 and 25.")
             return
 
-        #self.binary_str = self.gen_rand_sequence(length)
-        self.binary_str = "10100"  # This line is for testing
+        self.binary_str = self.gen_rand_sequence(length)
+        # self.binary_str = "10100"  # This line is for testing
         self.display_binary_sequence()
         # self.tree[0] = self.prev_node
         print(self.binary_str)
@@ -475,10 +475,6 @@ class BinaryGame:
                 end_label = f"{self.player2.type} Won! {end_label}"
             self.end_result_label.config(text=f"{end_label}", bg="light gray")
             print("GAME OVER!")
-
-    # def setPoints(self, temp_p1_points, temp_p2_points):
-    #     self.prev_node.p1_points = temp_p1_points
-    #     self.prev_node.p2_points = temp_p2_points
 
     def set_node_vals(self, temp_p1_points, temp_p2_points, temp_heuristic):
         self.prev_node = self.prev_node._replace(p1_points=temp_p1_points,
